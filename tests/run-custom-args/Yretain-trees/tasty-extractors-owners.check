@@ -1,0 +1,27 @@
+foo
+DefDef("main", Nil, List(List(ValDef("args", TypeTree.Inferred(), None))), TypeTree.Inferred(), None)
+
+bar
+DefDef("foo", Nil, Nil, TypeTree.Inferred(), None)
+
+bar2
+DefDef("foo", Nil, Nil, TypeTree.Inferred(), None)
+
+foo2
+DefDef("main", Nil, List(List(ValDef("args", TypeTree.Inferred(), None))), TypeTree.Inferred(), None)
+
+baz
+ValDef("foo2", TypeTree.Inferred(), None)
+
+baz2
+ValDef("foo2", TypeTree.Inferred(), None)
+
+<init>
+ClassDef("A", DefDef("<init>", Nil, List(Nil), TypeTree.Inferred(), None), List(TypeTree.Inferred()), Nil, None, List(TypeDef("B", TypeBoundsTree(TypeTree.Inferred(), TypeTree.Inferred())), DefDef("b", Nil, Nil, TypeTree.Inferred(), None), ValDef("b2", TypeTree.Inferred(), None)))
+
+b
+ClassDef("A", DefDef("<init>", Nil, List(Nil), TypeTree.Inferred(), None), List(TypeTree.Inferred()), Nil, None, List(TypeDef("B", TypeBoundsTree(TypeTree.Inferred(), TypeTree.Inferred())), DefDef("b", Nil, Nil, TypeTree.Inferred(), None), ValDef("b2", TypeTree.Inferred(), None)))
+
+b2
+ClassDef("A", DefDef("<init>", Nil, List(Nil), TypeTree.Inferred(), None), List(TypeTree.Inferred()), Nil, None, List(TypeDef("B", TypeBoundsTree(TypeTree.Inferred(), TypeTree.Inferred())), DefDef("b", Nil, Nil, TypeTree.Inferred(), None), ValDef("b2", TypeTree.Inferred(), None)))
+

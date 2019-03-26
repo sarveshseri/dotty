@@ -1,0 +1,29 @@
+# Wrong number of arguments (only on bootstrapped)
+i3130b.scala
+
+# Missing position
+collections_1.scala
+
+# MatchError in SymDenotation.sourceModule on a ThisType
+t3612.scala
+
+# Fails on MacOS
+annot-bootstrap.scala
+
+# ScalaRunTime cannot be unpickled because it is already loaded
+repeatedArgs213.scala
+
+# Error printing parent constructors that are blocks
+default-super.scala
+
+# Did not survive addition of type ascriptions in decompiled tests
+i3050.scala
+i4006b.scala
+i4006c.scala
+
+# Not sure what's wring here
+i4203.scala
+t6278-synth-def.scala
+
+# Need to print empty tree for implicit match
+i5938.scala

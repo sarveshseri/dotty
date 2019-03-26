@@ -1,0 +1,2 @@
+DefDef("foo", Nil, Nil, TypeTree.Inferred(), None)
+ValDef("bar", TypeTree.Inferred(), None)

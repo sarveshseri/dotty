@@ -1,0 +1,3 @@
+class A() extends B with C
+trait B() extends java.lang.Object
+trait C() extends java.lang.Object

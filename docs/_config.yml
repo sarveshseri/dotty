@@ -1,5 +1,0 @@
-title: Dotty Documentation
-baseurl: "/dotty"
-theme: minima
-gems:
-    - jekyll-toc

@@ -7,19 +7,19 @@ type Grass = {
 }
 type Animal = {
   type Food
-  def eats(food: Food): Unit   // error
-  def gets: Food               // error
+  def eats(food: Food): Unit
+  def gets: Food
 }
 type Cow = {
   type IsMeat = Any
   type Food <: Grass
-  def eats(food: Grass): Unit  // error
-  def gets: Grass              // error
+  def eats(food: Grass): Unit
+  def gets: Grass
 }
 type Lion = {
   type Food = Meat
-  def eats(food: Meat): Unit   // error
-  def gets: Meat               // error
+  def eats(food: Meat): Unit
+  def gets: Meat
 }
 def newMeat: Meat = new {
   type IsMeat = Any
@@ -40,5 +40,5 @@ def newLion: Lion = new {
 }
 val milka = newCow
 val leo = newLion
-leo.eats(milka) // structural select not supported
+leo.eats(milka)  // error: no projector found
 }

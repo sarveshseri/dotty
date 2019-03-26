@@ -1,9 +1,8 @@
 ---
-layout: default
+layout: doc-page
+title: "Type System"
 ---
 
-Type System
-===========
 The types are defined in [dotty/tools/dotc/core/Types.scala][1]
 
 ## Class diagram ##
@@ -14,6 +13,8 @@ A type which inherits `TypeProxy` is a proxy for another type accessible using
 the `underlying` method, other types are called _ground_ types and inherit
 `CachedGroundType` or `UncachedGroundType`.
 
+Here's a diagram, copied from [dotty/tools/dotc/core/Types.scala][1]:
+
 ```
 Type -+- ProxyType --+- NamedType ----+--- TypeRef
       |              |                 \
@@ -23,19 +24,22 @@ Type -+- ProxyType --+- NamedType ----+--- TypeRef
       |              |                +--- SuperType
       |              |                +--- ConstantType
       |              |                +--- MethodParam
-      |              |                +--- RefinedThis
+      |              |                +----RecThis
+      |              |                +--- SkolemType
       |              +- PolyParam
-      |              +- RefinedType
+      |              +- RefinedOrRecType -+-- RefinedType
+      |              |                   -+-- RecType
+      |              +- HKApply
       |              +- TypeBounds
       |              +- ExprType
       |              +- AnnotatedType
       |              +- TypeVar
+      |              +- PolyType
       |
       +- GroundType -+- AndType
                      +- OrType
                      +- MethodType -----+- ImplicitMethodType
                      |                  +- JavaMethodType
-                     +- PolyType
                      +- ClassInfo
                      |
                      +- NoType
@@ -127,8 +131,8 @@ TODO
 ## Type inference via constraint solving ##
 TODO
 
-[1]: https://github.com/lampepfl/dotty/blob/master/src/dotty/tools/dotc/core/Types.scala
+[1]: https://github.com/lampepfl/dotty/blob/master/compiler/src/dotty/tools/dotc/core/Types.scala
 [2]: https://github.com/samuelgruetter/dotty/blob/classdiagrampdf/dotty-types.pdf
 [3]: https://github.com/samuelgruetter/scaladiagrams/tree/print-descendants
-[4]: https://github.com/lampepfl/dotty/blob/master/src/dotty/tools/dotc/core/TypeComparer.scala
+[4]: https://github.com/lampepfl/dotty/blob/master/compiler/src/dotty/tools/dotc/core/TypeComparer.scala
 [5]: https://github.com/lampepfl/dotty/blob/master/tests/pos/refinedSubtyping.scala

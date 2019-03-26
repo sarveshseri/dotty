@@ -1,31 +1,28 @@
-<div class="page white">
-    <div class="centered" style="padding-top: 32px">
-        <h1 id="getting-started">Getting Started</h1>
-        <p>
-            Using Dotty to compile your project is now pretty simple. Create the
-            following structure:
-        </p>
-        <pre class="sourceCode bordered">
-<code>.
-├── build.sbt
-├── project
-│   ├── build.properties
-│   └── plugins.sbt
-└── src</code></pre>
-        <h2 id="build.sbt">build.sbt</h2>
-        <pre class="sourceCode bordered"><code>name := "application"
-version := "0.1"
-enablePlugins(DottyPlugin)</code></pre>
-        <h2 id="build.properties">build.properties</h2>
-        <pre class="sourceCode bordered"><code>sbt.version=0.13.11</code></pre>
-        <h2 id="plugins.sbt">plugins.sbt</h2>
-        <pre class="sourceCode bordered"><code>addSbtPlugin("com.felixmulder" % "sbt-dotty" % "0.1.4")</code></pre>
-        <p>
-            This plugin is based on the
-            <a href="https://github.com/smarter/dotty-example-project">
-                dotty-example-project
-            </a>, but let’s you skip building dotty from scratch.
-        </p>
+<div class="page blue">
+    <div class="centered questions">
+
+        <h1 id="getting-started">Try Dotty</h1>
+        <p>If you are a Mac user, you can install Dotty with <a href="https://brew.sh/">brew</a>:</p>
+        <pre class="sourceCode bright"><code>brew install lampepfl/brew/dotty</code></pre>
+
+        <p>If you are a Linux or Windows user, download the <a href="https://github.com/lampepfl/dotty/releases">latest release</a>. Optionally add path of the folder <code>bin/</code> to the system environment variable <code>PATH</code>. </p>
+
+        <p>Now you can compile Scala source code:<p>
+        <pre class="sourceCode bright"><code>dotc hello.scala</code></pre>
+
+        <p>To start the REPL, run: <code>dotr</code>.<p>
+
+        <p>Or, you can try Dotty in your browser with <a href="https://scastie.scala-lang.org/?target=dotty">Scastie</a>.</p>
+
+        <h1 id="getting-started-with-a-project">Create a Dotty Project</h1>
+        <p>The fastest way to create a new project in Dotty is using <a href="http://www.scala-sbt.org/">sbt (1.1.4+)</a>.</p>
+
+        <p>Create a Dotty project:</p>
+        <pre class="sourceCode bright"><code>sbt new <a href="https://github.com/lampepfl/dotty.g8">lampepfl/dotty.g8</a></code></pre>
+
+        <p>Or a Dotty project that cross compiles with Scala 2:</p>
+        <pre class="sourceCode bright"><code>sbt new <a href="https://github.com/lampepfl/dotty-cross.g8">lampepfl/dotty-cross.g8</a></code></pre>
+
+        <p>For documentation see the <a href="https://github.com/lampepfl/dotty-example-project">Dotty Example Project</a>.</p>
     </div>
 </div>
-

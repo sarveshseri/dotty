@@ -1,8 +1,9 @@
 ---
-layout: blog
+layout: blog-page
 title: The Essence of Scala
 author: Martin Odersky
 authorImg: /images/martin.jpg
+date: 2016-02-03
 ---
 
 What do you get if you boil Scala on a slow flame and wait until all
@@ -131,7 +132,7 @@ project are important.
     wildcard parameters `[_ <: T]`, `[_ >: T]` should be.
 
  3. DOT also provides a blueprint for Scala compilation. The new Scala
-    compiler _dotty_ has internal data structures that closely resemble DOT.
+    compiler _Dotty_ has internal data structures that closely resemble DOT.
     In particular, type parameters are immediately mapped to type members,
     in the way we propose to encode them also in the calculus.
 

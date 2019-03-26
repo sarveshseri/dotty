@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+source $(dirname $0)/cmdTestsCommon.inc.sh
+
+# check that `sbt dotc` compiles and `sbt dotr` runs it
+echo "testing sbt dotc and dotr"
+"$SBT" ";dotc $SOURCE -d $OUT ;dotr -classpath $OUT $MAIN" > "$tmp"
+grep -qe "$EXPECTED_OUTPUT" "$tmp"
+
+# check that `sbt dotc` compiles and `sbt dotr` runs it
+echo "testing sbt dotc -from-tasty and dotr -classpath"
+clear_out "$OUT"
+"$SBT" ";dotc $SOURCE -d $OUT ;dotc -from-tasty -classpath $OUT -d $OUT1 $MAIN ;dotr -classpath $OUT1 $MAIN" > "$tmp"
+grep -qe "$EXPECTED_OUTPUT" "$tmp"
+
+# check that `sbt dotc -decompile` runs
+echo "testing sbt dotc -decompile"
+"$SBT" ";dotc -decompile -color:never -classpath $OUT $MAIN" > "$tmp"
+grep -qe "def main(args: scala.Array\[scala.Predef.String\]): scala.Unit =" "$tmp"
+
+echo "testing sbt dotc -decompile from file"
+"$SBT" ";dotc -decompile -color:never -classpath $OUT $OUT/$TASTY" > "$tmp"
+grep -qe "def main(args: scala.Array\[scala.Predef.String\]): scala.Unit =" "$tmp"
+
+echo "testing sbt dotr with no -classpath"
+clear_out "$OUT"
+"$SBT" ";dotc $SOURCE ; dotr $MAIN" > "$tmp"
+grep -qe "$EXPECTED_OUTPUT" "$tmp"
+
+echo "testing loading tasty from .tasty file in jar"
+clear_out "$OUT"
+"$SBT" ";dotc -d $OUT/out.jar $SOURCE; dotc -decompile -classpath $OUT/out.jar -color:never $MAIN" > "$tmp"
+grep -qe "def main(args: scala.Array\[scala.Predef.String\]): scala.Unit =" "$tmp"
+
+## Disabled because of flakeyness, should be changed to not depend on sbt
+# echo "running Vulpix meta test"
+# tmp=$(mktemp)
+# if "$SBT" "dotty-compiler/testOnly dotty.tools.vulpix.VulpixMetaTests" > "$tmp" 2>&1; then
+#   cat "$tmp"
+#   echo "failed: sbt exited without error on VulpixMetaTests, these tests are expected to fail"
+#   exit -1
+# fi
+# tmp1=$(mktemp)
+# cat "$tmp" | sed '/Test run started/,$!d' > "$tmp1"
+# set +x # Or the code below produces too much noise
+# while read expected <&4 && read actual <&3; do
+#   if [[ "$expected" != *"SKIP" ]]; then
+#     if [ "$actual" != "$expected" ]; then
+#       echo "failed Vulpix meta: the output of sbt differs from the expected output"
+#       echo "expected : $expected"
+#       echo "actual   : $actual"
+#       exit -1
+#     fi
+#   fi
+# done 3<"$tmp1" 4<"./tests/vulpix-tests/meta/sbt-output.check"

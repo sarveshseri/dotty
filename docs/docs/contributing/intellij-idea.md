@@ -1,36 +1,65 @@
 ---
-layout: default
+layout: doc-page
+title: Building Dotty with Intellij IDEA
 ---
 
-Building Dotty with Intellij IDEA
-=================================
-Dotty compiler support is available in the [Scala plugin nightly] starting
-from 2.2.39. You need to install [IDEA 2016.1] to try it.
+Setup
+-----
 
-## To create a new project with Dotty
+You can setup IntelliJ [IDEA >= 2016.1](https://www.jetbrains.com/idea/nextversion) to run Dotty.
 
-1. Open New Project dialog and select `Scala` > `Dotty`
-2. Proceed as usual and don't forget to create or select Dotty SDK.
+Assuming you have cloned Dotty's repository from Github (and run `sbt managedSources` as described in [Getting Started](getting-started.md)),
+you can now proceed with importing it to IDEA by selecting the
+corresponding option from the startup menu. Navigate on the corresponding directory and select it. Next, you need
+to select the model of the import and as the screenshot shows, select SBT.
 
-## To compile an existing Scala project with Dotty
+![](../../images/idea/idea-import.png "Import Dotty in IDEA")
 
-1. Create a new Dotty SDK:
-   `Project Structure` > `Global libraries` > `New Global Library` > `Dotty SDK`
-2. Replace Scala SDK with Dotty SDK in:
-   `Project Structure` > `Modules` > `Dependencies`
+Next, you select the version of the JDK that this project relies on and verify that you have selected 1.8 (assuming
+its installed on your local machine). Otherwise, specify it by pressing *New*.
 
-Java 1.8 should be used as the Project/Module SDK. You also need to enable the
-Scala Compile Server to use Dotty compiler.
+![](../../images/idea/idea-sdk.png "Select the JDK")
 
-## Notes
-* Dotty support is experimental, many features including code highlighting and
-  worksheet are not ready yet.
-* You can download the latest version of Dotty without creating a new Dotty SDK
-  with the `Update snapshot` button in the Dotty SDK library settings.
-* Please report any problems to the [IntelliJ Scala issue tracker] or write
-  to the [IntelliJ Scala gitter]
+Next we must select which modules we can import. IDEA version 2017.1 and earlier presents the full list of SBT modules
+that are defined in Dotty. You can either select all (expect performance degradation if you select all) or
+select only the `dotty` module. In order to do that, unselect all modules and select on `dotty`. IDEA, then, automatically
+selects all the necessary dependencies and you press OK.
 
-[Scala plugin nightly]: https://confluence.jetbrains.com/display/SCA/Scala+Plugin+Nightly
-[IDEA 2016.1]: https://www.jetbrains.com/idea/nextversion/
-[IntelliJ Scala issue tracker]: https://youtrack.jetbrains.com/issues/SCL
-[IntelliJ Scala gitter]: https://gitter.im/JetBrains/intellij-scala
+![](../../images/idea/idea-sbt.png "Select modules to import")
+
+In IDEA version 2017.2 and later, wait for the project to load. Then right click on `dotty` in the project explorer
+and select `Load/Unload Modules...`. Select only `dotty`, accept when IDEA asks to add its dependencies and press OK.
+
+Running/Debugging
+-------
+
+To run the compiler you can do it either as an sbt command or a shell script. Open an external terminal.
+For the first option, a test can be run as follows.
+
+```shell
+$ sbt
+> dotc tests/pos/Arrays.scala
+```
+For the second option, the compiler can be run using a script in the `bin` directory:
+
+```shell
+$ ./bin/dotc tests/pos/Arrays.scala
+```
+
+If you are interested in debugging the compiler, you can use a remote debugging configuration.
+This is done by launching dotc's JVM with the JDWP agent loaded. To that end, run
+```shell
+$ ./bin/dotc -debug tests/pos/Arrays.scala
+```
+Then when dotc starts, it will suspend and wait for a debugger to connect on port `5005`.
+Next a configuration for Debug must be created in IDEA: 
+
+> Run > Edit Configurations > Add New Configuration > (select) Remote
+
+![](../../images/idea/idea-debug.png "Create a Debug Configuration")
+
+Under `Search sources using module's classpath` select `dotty`. Set breakpoints as desired.
+Then hit the button whose tooltip says `Debug dotty-debug` (since we used `dotty-debug` for the name of
+the sample configuration above) in IDEA to connect the debugger to the JVM and begin debugging. The default data on the debug configuration matches the enabled agent on the VM so, probably,
+ you will not need to change anything else.
+ 

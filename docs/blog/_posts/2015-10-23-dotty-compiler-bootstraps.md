@@ -1,8 +1,10 @@
 ---
-layout: blog
+layout: blog-page
 author: Martin Odersky and Dmitry Petrashko
 title: "We got liftoff!"
 subTitle: The Dotty compiler for Scala bootstraps.
+excerpt_separator: <!--more-->
+date: 2015-10-23
 ---
 
 The [Dotty project](https://github.com/lampepfl/dotty)
@@ -16,6 +18,8 @@ Today we reached an important milestone: the Dotty compiler can
 compile itself, and the compiled compiler can act as a drop-in for the
 original one. This is what one calls a *bootstrap*.
 
+<!--more-->
+
 ## Why is this important?
 
 The main reason is that this gives us a some validation of the
@@ -26,7 +30,7 @@ fine, yet gets translated to something subtly wrong by the compiler.
 
 Having the compiler compile itself is a good test to demonstrate that
 the generated code has reached a certain level of quality. Not only is
-a compiler a large program (44k lines in the case of dotty), it is
+a compiler a large program (44k lines in the case of Dotty), it is
 also one that exercises a large part of the language in quite
 intricate ways. Moreover, bugs in the code of a compiler don't tend to
 go unnoticed, precisely because every part of a compiler feeds into

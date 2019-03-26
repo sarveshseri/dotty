@@ -1,11 +1,8 @@
 ---
-layout: default
-title: "Periods"
-toc: true
+layout: doc-page
+title: "Dotc's concept of time"
 ---
 
-Dotc's concept of time
-======================
 Conceptually, the `dotc` compiler's job is to maintain views of various
 artifacts associated with source code at all points in time.  But what is
 *time* for `dotc`? In fact, it is a combination of compiler runs and compiler
@@ -91,6 +88,6 @@ object Period {
 
 As a sentinel value there's `Nowhere`, a period that is empty.
 
-[runs]: https://github.com/lampepfl/dotty/blob/master/src/dotty/tools/dotc/Run.scala
-[phases]: https://github.com/lampepfl/dotty/blob/master/src/dotty/tools/dotc/core/Phases.scala
-[period]: https://github.com/lampepfl/dotty/blob/master/src/dotty/tools/dotc/core/Periods.scala
+[runs]: https://github.com/lampepfl/dotty/blob/a527f3b1e49c0d48148ccfb2eb52e3302fc4a349/compiler/src/dotty/tools/dotc/Run.scala
+[phases]: https://github.com/lampepfl/dotty/blob/a527f3b1e49c0d48148ccfb2eb52e3302fc4a349/compiler/src/dotty/tools/dotc/core/Phases.scala
+[period]: https://github.com/lampepfl/dotty/blob/a527f3b1e49c0d48148ccfb2eb52e3302fc4a349/compiler/src/dotty/tools/dotc/core/Periods.scala

@@ -1,58 +1,42 @@
 ---
-layout: default
-title: "Workflow"
+layout: doc-page
+title: Workflow
 ---
 
-Workflow
-========
-This document details common workflow patterns when working with Dotty.
+Check [Getting Started](getting-started.md) for instructions on how to obtain the source code of dotty and 
+[Eclipse](eclipse.md) or [IntelliJ-IDEA](intellij-idea.md).
+This document details common workflow patterns when working with Dotty before using the debugging tools.
 
 ## Compiling files with dotc ##
 
-From sbt:
+As we have seen you can compile a test file either from sbt:
 
 ```bash
-> run <OPTIONS> <FILE>
+$ sbt
+> dotc <OPTIONS> <FILE>
 ```
 
-From terminal:
+or from terminal:
 
 ```bash
-$ ./bin/dotc <OPTIONS> <FILE>
+$ dotc <OPTIONS> <FILE>
 ```
 
 Here are some useful debugging `<OPTIONS>`:
 
 * `-Xprint:PHASE1,PHASE2,...` or `-Xprint:all`: prints the `AST` after each
-  specified phase. Phase names can be found by searching
-  `src/dotty/tools/dotc/transform/` for `phaseName`.
+  specified phase. Phase names can be found by examining the
+  `dotty.tools.dotc.transform.*` classes for their `phaseName` field e.g., `-Xprint:erasure`. 
+  You can discover all phases in the `dotty.tools.dotc.Compiler` class
 * `-Ylog:PHASE1,PHASE2,...` or `-Ylog:all`: enables `ctx.log("")` logging for
   the specified phase.
 * `-Ycheck:all` verifies the consistency of `AST` nodes between phases, in
   particular checks that types do not change. Some phases currently can't be
   `Ycheck`ed, therefore in the tests we run:
   `-Ycheck:tailrec,resolveSuper,mixin,restoreScopes,labelDef`.
-
-Additional logging information can be obtained by changes some `noPrinter` to
-`new Printer` in `src/dotty/tools/dotc/config/Printers.scala`. This enables the
-`subtyping.println("")` and `ctx.traceIndented("", subtyping)` style logging.
-
-## Running tests ##
-
-```bash
-$ sbt
-> partest --show-diff --verbose
-```
-
-## Running single tests ##
-To test a specific test tests/x/y.scala (for example tests/pos/t210.scala):
-
-```bash
-> partest-only-no-bootstrap --show-diff --verbose tests/partest-generated/x/y.scala
-```
-
-Currently this will re-run some tests and do some preprocessing because of the
-way partest has been set up.
+* the last frontier of debugging (before actual debugging) is the range of logging capabilities that 
+can be enabled through the `dotty.tools.dotc.config.Printers` object. Change any of the desired printer from `noPrinter` to
+`default` and this will give you the full logging capability of the compiler.
 
 ## Inspecting Trees with Type Stealer ##
 
@@ -60,8 +44,9 @@ There is no power mode for the REPL yet, but you can inspect types with the
 type stealer:
 
 ```bash
-$ ./bin/dotr
-scala> import test.DottyTypeStealer._; import dotty.tools.dotc.core._; import Contexts._,Types._
+$ sbt 
+> repl
+scala> import dotty.tools.DottyTypeStealer._; import dotty.tools.dotc.core._; import Contexts._,Types._
 ```
 
 Now, you can define types and access their representation. For example:

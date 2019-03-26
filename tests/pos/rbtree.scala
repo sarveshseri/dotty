@@ -457,11 +457,11 @@ object RedBlackTree {
   }
 
   object RedTree {
-    @inline def apply[A, B](key: A, value: B, left: Tree[A, B], right: Tree[A, B]) = new RedTree(key, value, left, right)
+    inline def apply[A, B](key: A, value: B, left: Tree[A, B], right: Tree[A, B]) = new RedTree(key, value, left, right)
     def unapply[A, B](t: RedTree[A, B]) = Some((t.key, t.value, t.left, t.right))
   }
   object BlackTree {
-    @inline def apply[A, B](key: A, value: B, left: Tree[A, B], right: Tree[A, B]) = new BlackTree(key, value, left, right)
+    inline def apply[A, B](key: A, value: B, left: Tree[A, B], right: Tree[A, B]) = new BlackTree(key, value, left, right)
     def unapply[A, B](t: BlackTree[A, B]) = Some((t.key, t.value, t.left, t.right))
   }
 
@@ -470,7 +470,7 @@ object RedBlackTree {
 
     override def hasNext: Boolean = lookahead ne null
 
-    override def next: R = lookahead match {
+    override def next(): R = lookahead match {
       case null =>
         throw new NoSuchElementException("next on empty iterator")
       case tree =>

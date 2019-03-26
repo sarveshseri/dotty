@@ -1,50 +1,61 @@
 ---
-layout: default
-title: Eclipse
+layout: doc-page
+title: Building Dotty with Eclipse
 ---
 
-Building Dotty with Eclipse
-===========================
-
-Build setup
+Setup
 -----------
-You may need to redo these steps when the build changes.
 
-1. Run `sbt eclipse`
-2. In dotty, go to `Properties > java build path > Libraries`.
-   Remove the Scala Compiler container (currently 2.11.4) and add as an
-   external jar the latest compiler version in the Ivy cache. This is
-   currently:
+You can setup Eclipse by using [Scala IDE for Eclipse](http://scala-ide.org/) to run Dotty. Alternatively you can download 
+your Eclipse distribution of choice and enable the Scala IDE from the Eclipse Marketplace, separately.
 
-   ```
-   .ivy2/cache/me.d-d/scala-compiler/jars/scala-compiler-2.11.5-20160322-171045-e19b30b3cd.jar
-   ```
+1. Clone Dotty's repository from Github (and run `sbt managedSources` as described in 
+[Getting Started](getting-started.md)) 
+2. Generate the Eclipse configuration files:
+```shell
+$ sbt eclipse
+```
 
-   But that might change in the future. Or, copy the latest scala compiler from
-   the cache to a stable name and use that as external jar.
-
-3. It is recommended to change the default output folder (in `Properties > java
+- Note: It is recommended to change the default output folder (in `Properties > java
    build path > Source`) to `dotty/classes` instead of `dotty/bin` because
    `dotty/bin` is reserved for shell scripts.
 
-If you have `CLASSPATH` defined:
+Optional: if you have `CLASSPATH` defined:
 
-4. Update your classpath to contain any new required external libraries to run
-   `./bin/dotc`, `./bin/doti` outside of Eclipse.
+1. Update your classpath to contain any new required external libraries to run
+   `./bin/dotc`, `./bin/dotr` outside of Eclipse.
 
-5. Open the `Run Configurations` tab, and edit the `tests` configuration so
+1. Open the `Run Configurations` tab, and edit the `tests` configuration so
    that it contains a `CLASSPATH` variable which reflects the current
    `CLASSPATH`.
+   
+   
+Import to Eclipse
+-----------------
 
-In order for compilation errors related to `ENUM` to be resolved, make sure
-that scala-reflect 2.11.5 is on the classpath.
+First step is to import dotty to Eclipse. This is done by selecting `File > Import` from the menu and selecting
+_Existing Projects into Workplace_. 
 
-Running the compiler Main class from Eclipse
---------------------------------------------
-1. Navigate to `dotty.tools.dotc.Main`
-2. `Run As... > Scala Application`
-3. `Run Configurations > Main$ > Classpath > Bootstrap entries`:
-   - Add the Scala library (`Advanced...` > `Add library...` > `Scala library`)
-   - Add the Dotty classfiles (`Add projects...` > `[x] dotty`)
-4. `Run Configurations > Main$ > Arguments` and add
-   `${project_loc}/examples/hello.scala`
+![](../../images/eclipse/eclipse-import.png "Import Dotty to Eclipse")
+
+On the next window, select the bare minimum configuration to run Dotty. You will need the compiler, library and the 
+interfaces.
+
+![](../../images/eclipse/eclipse-select.png "Import Dotty Projects")
+
+
+Running/Debugging
+---------------------------------------------------
+
+To run/debug Dotty you have to create a new configuration from `Run > Run Configurations`. First select the project on the
+package explorer and then select the aforementioned option. On the `Main` tab you must have `dotty-compiler` for the 
+_Project_ and `dotty.tools.dotc.Main` for the _Main class_. Specify the arguments you want for the compiler on the
+`Arguments` tab (e.g, flags and source files) and then proceed to the `Classpath` tab. There you must 
+specify three `Bootstrap Entries` which are the compiler, interfaces and the library as shown in the screenshot below. 
+Additionally you need to specify the scala-asm library as an external jar dependency. This can be found on your local
+`~/.ivy2/cache/` directory.
+
+![](../../images/eclipse/eclipse-runconfiguration.png "Import Dotty Projects")
+
+The compiler can be run and debugged using the same configuration. 
+

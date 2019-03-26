@@ -1,17 +1,18 @@
 ---
-layout: default
-title: "cbt"
+layout: doc-page
+title: "Using Dotty with cbt"
 ---
 
-Using Dotty with cbt
-====================
-cbt comes with built-in dotty support. Follow the
+**NOTE: cbt support for Dotty is experimental and incomplete (for example,
+incremental compilation is not supported), we recommend [using Dotty with sbt](sbt-projects.md) for now.**
+
+cbt comes with built-in Dotty support. Follow the
 [cbt tutorial](https://github.com/cvogt/cbt/), then simply extend `Dotty` in the Build class.
 
 ```scala
 // build/build.scala
 import cbt._
-class Build(val context: Context) extends Dotty{
+class Build(val context: Context) extends Dotty {
   ...
 }
 ```

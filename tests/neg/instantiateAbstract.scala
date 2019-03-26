@@ -15,7 +15,7 @@ object Test {
 
   @scala.annotation.Annotation type T = String // error
   @scala.annotation.Annotation val x = 1 // error
-  @scala.annotation.Annotation def f = 1 //error
+  @scala.annotation.Annotation def f = 1 // error
 
   (1: @scala.annotation.Annotation) // error
 
@@ -24,7 +24,7 @@ object Test {
 
   new TT // error
 
-  new A
+  new A // error "A does not conform to its self type B; cannot be instantiated"
 
 // the following are OK in Typer but would be caught later in RefChecks
 
@@ -37,4 +37,3 @@ object Test {
   object OO extends AA
 }
 
-// nopos-error: "A does not conform to its self type B; cannot be instantiated"

@@ -143,7 +143,7 @@ object CollectionStrawMan6 extends LowPriority {
     def iterator = new Iterator[A] {
       private[this] var current: Seq[A] = self
       def hasNext = !current.isEmpty
-      def next = { val r = current.head; current = current.tail; r }
+      def next() = { val r = current.head; current = current.tail; r }
     }
 
     /** `length is defined in terms of `iterator` */
@@ -169,7 +169,7 @@ object CollectionStrawMan6 extends LowPriority {
   trait Buildable[+A, +Repr] extends Any with IterableMonoTransforms[A, Repr]  {
 
     /** Creates a new builder. */
-    protected[this] def newBuilder: Builder[A, Repr]
+    protected[this] def newBuilder: Builder[A @uncheckedVariance, Repr]
 
     /** Optimized, push-based version of `partition`. */
     override def partition(p: A => Boolean): (Repr, Repr) = {
@@ -227,7 +227,7 @@ object CollectionStrawMan6 extends LowPriority {
     /** Create a collection of type `C[A]` from the elements of `coll`, which has
      *  the same element type as this collection. Overridden in StringOps and ArrayOps.
      */
-    protected[this] def fromIterableWithSameElemType(coll: Iterable[A]): C[A] = fromIterable(coll)
+    protected[this] def fromIterableWithSameElemType(coll: Iterable[A @uncheckedVariance]): C[A @uncheckedVariance] = fromIterable(coll)
   }
 
   /** Base trait for Seq operations */
@@ -350,7 +350,7 @@ object CollectionStrawMan6 extends LowPriority {
    */
   trait IterableMonoTransforms[+A, +Repr] extends Any {
     protected def coll: Iterable[A]
-    protected[this] def fromIterableWithSameElemType(coll: Iterable[A]): Repr
+    protected[this] def fromIterableWithSameElemType(coll: Iterable[A @uncheckedVariance]): Repr
 
     /** All elements satisfying predicate `p` */
     def filter(p: A => Boolean): Repr = fromIterableWithSameElemType(View.Filter(coll, p))
@@ -416,12 +416,12 @@ object CollectionStrawMan6 extends LowPriority {
   /** Concrete collection type: List */
   sealed trait List[+A]
   extends LinearSeq[A]
-     with SeqLike[A, List]
+     with LinearSeqLike[A, List]
      with Buildable[A, List[A]] {
 
     def fromIterable[B](c: Iterable[B]): List[B] = List.fromIterable(c)
 
-    protected[this] def newBuilder = new ListBuffer[A].mapResult(_.toList)
+    protected[this] def newBuilder = new ListBuffer[A @uncheckedVariance].mapResult(_.toList)
 
     /** Prepend element */
     def :: [B >: A](elem: B): List[B] =  new ::(elem, this)
@@ -605,7 +605,7 @@ object CollectionStrawMan6 extends LowPriority {
   }
 
   class LazyList[+A](expr: => LazyList.Evaluated[A])
-  extends LinearSeq[A] with SeqLike[A, LazyList] {
+  extends LinearSeq[A] with LinearSeqLike[A, LazyList] {
     private[this] var evaluated = false
     private[this] var result: LazyList.Evaluated[A] = _
 
@@ -892,7 +892,7 @@ object CollectionStrawMan6 extends LowPriority {
     def iterator: Iterator[A] = new Iterator[A] {
       private var current = 0
       def hasNext = current < self.length
-      def next: A = {
+      def next(): A = {
         val r = apply(current)
         current += 1
         r
@@ -942,7 +942,7 @@ object CollectionStrawMan6 extends LowPriority {
     def next(): A
     def iterator = this
     def foldLeft[B](z: B)(op: (B, A) => B): B =
-      if (hasNext) foldLeft(op(z, next))(op) else z
+      if (hasNext) foldLeft(op(z, next()))(op) else z
     def foldRight[B](z: B)(op: (A, B) => B): B =
       if (hasNext) op(next(), foldRight(z)(op)) else z
     def foreach(f: A => Unit): Unit =
@@ -1011,7 +1011,7 @@ object CollectionStrawMan6 extends LowPriority {
     def take(n: Int): Iterator[A] = new Iterator[A] {
       private var i = 0
       def hasNext = self.hasNext && i < n
-      def next =
+      def next() =
         if (hasNext) {
           i += 1
           self.next()
@@ -1036,7 +1036,7 @@ object CollectionStrawMan6 extends LowPriority {
   object Iterator {
     val empty: Iterator[Nothing] = new Iterator[Nothing] {
       def hasNext = false
-      def next = throw new NoSuchElementException("next on empty iterator")
+      def next() = throw new NoSuchElementException("next on empty iterator")
     }
     def apply[A](xs: A*): Iterator[A] = new IndexedView[A] {
       val length = xs.length

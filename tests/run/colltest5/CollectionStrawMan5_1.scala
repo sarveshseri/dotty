@@ -48,7 +48,7 @@ object CollectionStrawMan5 {
 
   /** Base trait for strict collections */
   trait Buildable[+A, +To <: Iterable[A]] extends Iterable[A] {
-    protected[this] def newBuilder: Builder[A, To]
+    protected[this] def newBuilder: Builder[A, To] @uncheckedVariance
     override def partition(p: A => Boolean): (To, To) = {
       val l, r = newBuilder
       iterator.foreach(x => (if (p(x)) l else r) += x)
@@ -87,7 +87,7 @@ object CollectionStrawMan5 {
        with IterableOps[A]
        with IterableMonoTransforms[A, C[A @uncheckedVariance]] // sound bcs of VarianceNote
        with IterablePolyTransforms[A, C] {
-    protected[this] def fromLikeIterable(coll: Iterable[A]): C[A] = fromIterable(coll)
+    protected[this] def fromLikeIterable(coll: Iterable[A] @uncheckedVariance): C[A] @uncheckedVariance = fromIterable(coll)
   }
 
   /** Base trait for Seq operations */
@@ -101,13 +101,13 @@ object CollectionStrawMan5 {
     def foldRight[B](z: B)(op: (A, B) => B): B = iterator.foldRight(z)(op)
     def indexWhere(p: A => Boolean): Int = iterator.indexWhere(p)
     def isEmpty: Boolean = !iterator.hasNext
-    def head: A = iterator.next
+    def head: A = iterator.next()
     def view: View[A] = View.fromIterator(iterator)
   }
 
   trait IterableMonoTransforms[+A, +Repr] extends Any {
     protected def coll: Iterable[A]
-    protected[this] def fromLikeIterable(coll: Iterable[A]): Repr
+    protected[this] def fromLikeIterable(coll: Iterable[A] @uncheckedVariance): Repr
     def filter(p: A => Boolean): Repr = fromLikeIterable(View.Filter(coll, p))
     def partition(p: A => Boolean): (Repr, Repr) = {
       val pn = View.Partition(coll, p)
@@ -134,7 +134,7 @@ object CollectionStrawMan5 {
     def reverse: Repr = {
       var xs: List[A] = Nil
       var it = coll.iterator
-      while (it.hasNext) xs = new Cons(it.next, xs)
+      while (it.hasNext) xs = new Cons(it.next(), xs)
       fromLikeIterable(xs)
     }
   }
@@ -149,7 +149,7 @@ object CollectionStrawMan5 {
     def iterator = new Iterator[A] {
       private[this] var current = self
       def hasNext = !current.isEmpty
-      def next = { val r = current.head; current = current.tail; r }
+      def next() = { val r = current.head; current = current.tail; r }
     }
     def fromIterable[B](c: Iterable[B]): List[B] = List.fromIterable(c)
     def apply(i: Int): A = {
@@ -158,7 +158,7 @@ object CollectionStrawMan5 {
     }
     def length: Int =
       if (isEmpty) 0 else 1 + tail.length
-    protected[this] def newBuilder = new ListBuffer[A]
+    protected[this] def newBuilder = new ListBuffer[A] @uncheckedVariance
     def ++:[B >: A](prefix: List[B]): List[B] =
       if (prefix.isEmpty) this
       else Cons(prefix.head, prefix.tail ++: this)
@@ -352,7 +352,7 @@ object CollectionStrawMan5 {
     def iterator: Iterator[A] = new Iterator[A] {
       private var current = start
       def hasNext = current < end
-      def next: A = {
+      def next(): A = {
         val r = apply(current)
         current += 1
         r
@@ -423,7 +423,7 @@ object CollectionStrawMan5 {
     def next(): A
     def iterator = this
     def foldLeft[B](z: B)(op: (B, A) => B): B =
-      if (hasNext) foldLeft(op(z, next))(op) else z
+      if (hasNext) foldLeft(op(z, next()))(op) else z
     def foldRight[B](z: B)(op: (A, B) => B): B =
       if (hasNext) op(next(), foldRight(z)(op)) else z
     def foreach(f: A => Unit): Unit =
@@ -503,7 +503,7 @@ object CollectionStrawMan5 {
   object Iterator {
     val empty: Iterator[Nothing] = new Iterator[Nothing] {
       def hasNext = false
-      def next = throw new NoSuchElementException("next on empty iterator")
+      def next() = throw new NoSuchElementException("next on empty iterator")
     }
     def apply[A](xs: A*): Iterator[A] = new RandomAccessView[A] {
       val start = 0

@@ -34,16 +34,13 @@ package p2 { // all being in the same package compiles fine
     }
   }
 
-  abstract class T3 extends T2 {
-    class A {   // error: classes cannot be overridden
-      bug()
-    }
-  }
 }
 
 class A[T] {
 
   def f(x: T)(y: T = x) = y
+
+  def next: T = ???
 
 }
 
@@ -52,6 +49,8 @@ class B extends A[Int] {
   def f(x: Int)(y: Int) = y // error: needs `override' modifier
 
   f(2)()
+
+  override def next(): Int = ???    // error: incompatible type
 
 }
 
@@ -82,27 +81,6 @@ class Y2 extends X2 {
 
 class X3 {
   override type T = A1 // error: overrides nothing
-}
-
-package p3 {
-
-// Dotty change of rules: Toverrider#f does not
-// override TCommon#f, hence the accidental override rule
-// applies.
-trait TCommon {
-  def f: String
-}
-
-class C1 extends TCommon {
-  def f = "in C1"
-}
-
-trait TOverrider { this: TCommon =>
-  override def f = "in TOverrider"   // The overridden self-type member...
-}
-
-class C2 extends C1 with TOverrider  // ... fails to override, here. // error: accidental override
-
 }
 
 package p4 {
